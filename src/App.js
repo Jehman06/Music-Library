@@ -51,7 +51,6 @@ function App() {
                 <SearchBar />
 
               </SearchContext.Provider>
-              {message}
               <DataContext.Provider value={data}>
                 <Gallery />
               </DataContext.Provider>
