@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Gallery from './components/Gallery'
 import SearchBar from './components/SearchBar'
@@ -6,6 +6,7 @@ import AlbumView from './components/AlbumView';
 import ArtistView from './components/ArtistView';
 import { DataContext } from './contexts/DataContext'
 import { SearchContext } from './contexts/SearchContext'
+import { createResource as fetchData } from './helper';
 
 function App() {
   let [message, setMessage] = useState('Search for Music!')
@@ -13,6 +14,12 @@ function App() {
   let searchInput = useRef('')
 
   const API_URL = 'https://itunes.apple.com/search?term='
+
+  useEffect(() => {
+    if (searchInput) {
+      setData(fetchData(searchInput))
+    }
+  }, [searchInput])
 
   const handleSearch = (term) => {
     // Fetch Data
