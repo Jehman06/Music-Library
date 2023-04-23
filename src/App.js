@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Gallery from './components/Gallery'
 import SearchBar from './components/SearchBar'
@@ -7,10 +7,11 @@ import ArtistView from './components/ArtistView';
 import { DataContext } from './contexts/DataContext'
 import { SearchContext } from './contexts/SearchContext'
 import { createResource as fetchData } from './helper';
+import Spinner from './components/Spinner';
 
 function App() {
   let [message, setMessage] = useState('Search for Music!')
-  let [data, setData] = useState([])
+  let [data, setData] = useState(null)
   let searchInput = useRef('')
 
   const API_URL = 'https://itunes.apple.com/search?term='
@@ -21,7 +22,7 @@ function App() {
     }
   }, [searchInput])
 
-  const handleSearch = (term) => {
+  const handleSearch = (e, term) => {
     // Fetch Data
     const fetchData = async () => {
       document.title = `${term} Music`;
@@ -35,6 +36,16 @@ function App() {
       }
     }
     fetchData()
+  }
+
+  const renderGallery = () => {
+    if (data) {
+      return (
+        <Suspense fallback={<Spinner />}>
+          <Gallery />
+        </Suspense>
+      )
+    }
   }
 
   return (
